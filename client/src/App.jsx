@@ -5,7 +5,7 @@ import { JoinQr, joinUrl } from './JoinQr.jsx';
 import { downloadText } from './download.js';
 import { normalizePhone } from '../../server/src/phone.js';
 import { DEFAULT_QUIZ } from '../../server/src/default-quiz.js';
-import { buildPictureRound, pictureCategories, ALL_PICTURES } from '../../server/src/picture-quiz.js';
+import { buildPictureRound, pictureCategories, customCategories, ALL_PICTURES } from '../../server/src/picture-quiz.js';
 
 // Dev: the server runs on :4000. Production: the website and the game server share one address.
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || (import.meta.env.DEV ? 'http://localhost:4000' : window.location.origin);
@@ -49,7 +49,7 @@ export default function App({ sessionKey = 'gametribe:player-session', watchPin 
   const [secondsLeft, setSecondsLeft] = useState(null);
   const [result, setResult] = useState(null);
   const [picking, setPicking] = useState(false); // the "which pictures?" panel on the home screen
-  const [pickedCats, setPickedCats] = useState(() => pictureCategories());
+  const [pickedCats, setPickedCats] = useState(() => (customCategories().length ? customCategories() : pictureCategories())); // once you add your own pictures, the picker starts on just those
   const [lastQuiz, setLastQuiz] = useState(null); // lets the host start the same quiz again after a game
   const [me, setMe] = useState(null); // this player's own score and rank, sent privately (phones do not receive the roster)
   const [confirmEnd, setConfirmEnd] = useState(false);
@@ -297,8 +297,8 @@ export default function App({ sessionKey = 'gametribe:player-session', watchPin 
         </div>
         {picking && <div className="picture-picker" role="group" aria-label="Choose which pictures to play">
           <div className="picker-title">Which pictures?</div>
-          <div className="picker-chips">{pictureCategories().map((c) => <button key={c} className="picker-chip" aria-pressed={pickedCats.includes(c)} onClick={() => setPickedCats((cur) => (cur.includes(c) ? (cur.length > 1 ? cur.filter((x) => x !== c) : cur) : [...cur, c]))}>{c} <span>{ALL_PICTURES.filter((p) => p.category === c).length}</span></button>)}</div>
-          <div className="picker-actions"><button className="button primary" onClick={() => createGame(buildPictureRound({ categories: pickedCats }))}>Host this round</button><button className="text-button" onClick={() => setPickedCats(pictureCategories())}>Select all</button></div>
+          <div className="picker-chips">{pictureCategories().map((c) => <button key={c} className="picker-chip" aria-pressed={pickedCats.includes(c)} onClick={() => setPickedCats((cur) => (cur.includes(c) ? (cur.length > 1 ? cur.filter((x) => x !== c) : cur) : [...cur, c]))}>{c.replace(/_/g, ' ')} <span>{ALL_PICTURES.filter((p) => p.category === c).length}</span></button>)}</div>
+          <div className="picker-actions"><button className="button primary" onClick={() => createGame(buildPictureRound({ categories: pickedCats }))}>Host this round</button>{customCategories().length > 0 && <button className="text-button" onClick={() => setPickedCats(customCategories())}>Only my pictures</button>}<button className="text-button" onClick={() => setPickedCats(pictureCategories())}>Select all</button></div>
           <p className="hint">{Math.min(20, ALL_PICTURES.filter((p) => pickedCats.includes(p.category)).length)} questions in this round. Add your own pictures with <code>npm run add-pictures</code>.</p>
         </div>}
         <div className="feature-row"><div><b>1</b><span>Make a room</span></div><div><b>2</b><span>Share the PIN</span></div><div><b>3</b><span>Play together</span></div></div>
@@ -387,7 +387,7 @@ function GameScreen({ game, secondsLeft, topPlayers, large = false }) {
 function PictureFrame({ question, small = false }) {
   if (!question?.image) return null;
   return <figure className={`picture-frame${small ? ' small' : ''}`}>
-    {question.category && <figcaption className="picture-category">{question.category.toUpperCase()}</figcaption>}
+    {question.category && <figcaption className="picture-category">{question.category.replace(/_/g, ' ').toUpperCase()}</figcaption>}
     <img src={question.image} alt="The picture to identify" draggable="false" decoding="async" />
   </figure>;
 }

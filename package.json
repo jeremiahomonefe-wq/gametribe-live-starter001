@@ -17,6 +17,7 @@
     "start": "npm --workspace server run start",
     "default-quiz": "node scripts/build-default-quiz.mjs",
     "add-pictures": "node scripts/add-pictures.mjs",
+    "check-pictures": "node scripts/check-pictures.mjs",
     "load-test": "node scripts/load-test.mjs"
   },
   "devDependencies": {

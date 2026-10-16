@@ -34,10 +34,10 @@ test('good rows become pool entries with hashed /pictures/custom paths, and thei
 });
 
 test('every kind of mistake is reported with its row number', () => {
-  const run = (patch, extra = {}) => prepareCustom([{ ...four[0], row: 5, ...patch }], { files: { 'a.png': 1000, 'big.png': 999999, 'a.exe': 5 }, makeName, ...extra }).problems.map((p) => p.message).join(' | ');
+  const run = (patch, extra = {}) => prepareCustom([{ ...four[0], row: 5, ...patch }], { files: { 'a.png': 1000, 'big.png': 999999, 'mid.png': 300 * 1024, 'a.exe': 5 }, makeName, ...extra }).problems.map((p) => p.message).join(' | ');
   assert.match(run({ file: 'missing.png' }), /not in the my-pictures folder/);
   assert.match(run({ file: 'a.exe' }), /must be one of/);
-  assert.match(run({ file: 'big.png' }), /KB/);
+  assert.match(run({ file: 'big.png' }), /Shrink it below 600 KB/);
   assert.match(run({ category: '' }), /no category/);
   assert.match(run({ answer: '' }), /no answer/);
   assert.match(run({ wrong: ['x'] }), /all three wrong answers or none/);
@@ -81,7 +81,7 @@ test('the script copies images under hashed names, writes the pool, and a bad ru
   assert.ok(!/tom\.svg|jerry\.svg/.test(generated), 'the original file names must not appear');
   const copied = fs.readdirSync(path.join(root, 'client/public/pictures/custom'));
   assert.equal(copied.length, 4);
-  assert.ok(copied.every((f) => /^[0-9a-f]{10}\.svg$/.test(f)));
+  assert.ok(copied.every((f) => /^[0-9a-f]{12}\.svg$/.test(f)));
 
   fs.appendFileSync(path.join(dir, 'pictures.csv'), 'nope.svg,Cartoons,Ghost,,,,\r\n');
   const bad = run();
@@ -89,4 +89,12 @@ test('the script copies images under hashed names, writes the pool, and a bad ru
   assert.match(bad.stderr, /Row 6: the file "nope.svg" is not in the my-pictures folder/);
   assert.equal(fs.readFileSync(path.join(root, 'server/src/custom-pictures.js'), 'utf8'), generated, 'a failed run leaves the last good result alone');
   fs.rmSync(root, { recursive: true, force: true });
+});
+
+test('a picture between 200 and 600 KB is accepted with a heads-up, not refused', () => {
+  const r = prepareCustom([{ ...four[0], file: 'mid.png', wrong: ['x', 'y', 'z'], row: 4 }], { files: { 'mid.png': 300 * 1024 }, makeName });
+  assert.deepEqual(r.problems, []);
+  assert.equal(r.items.length, 1);
+  assert.match(r.warnings[0].message, /300 KB/);
+  assert.equal(r.warnings[0].row, 4);
 });

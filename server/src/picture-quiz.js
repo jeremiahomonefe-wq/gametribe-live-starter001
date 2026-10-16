@@ -9,6 +9,8 @@ export const ALL_PICTURES = [...PICTURE_POOL, ...CUSTOM_PICTURES];
 
 export const PICTURE_TITLE = 'Guess the Picture';
 export const PICTURE_DEFAULTS = { count: 20, seconds: 12 };
+// Categories that come from your own pictures (my-pictures/pictures.csv), as opposed to the built-in Flags and Logos.
+export const customCategories = () => [...new Set(CUSTOM_PICTURES.map((p) => p.category))];
 export const pictureCategories = (pool = ALL_PICTURES) => [...new Set(pool.map((p) => p.category))];
 
 function shuffle(list, random) {

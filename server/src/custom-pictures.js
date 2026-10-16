@@ -3,7 +3,7 @@ export const CUSTOM_PICTURES = [
   {
     "category": "cartoons",
     "answer": "Cat",
-    "image": "/pictures/custom/820063c1b1.svg",
+    "image": "/pictures/custom/54a70573fdbe.jpg",
     "wrong": [
       "Dog",
       "Rabbit",
@@ -14,7 +14,7 @@ export const CUSTOM_PICTURES = [
   {
     "category": "cartoons",
     "answer": "Fry cook",
-    "image": "/pictures/custom/eb058f9107.svg",
+    "image": "/pictures/custom/7dacf1ffecbc.jpg",
     "wrong": [
       "Police officer",
       "Teacher",
@@ -25,7 +25,7 @@ export const CUSTOM_PICTURES = [
   {
     "category": "cartoons",
     "answer": "Great Dane",
-    "image": "/pictures/custom/8f8f00ea84.svg",
+    "image": "/pictures/custom/33ef557ef6c4.jpg",
     "wrong": [
       "Bulldog",
       "German Shepherd",
@@ -36,7 +36,7 @@ export const CUSTOM_PICTURES = [
   {
     "category": "animation_gaming",
     "answer": "Electric",
-    "image": "/pictures/custom/897f2d8442.svg",
+    "image": "/pictures/custom/c40326bb0013.jpg",
     "wrong": [
       "Fire",
       "Water",
@@ -47,7 +47,7 @@ export const CUSTOM_PICTURES = [
   {
     "category": "animation",
     "answer": "Ogre",
-    "image": "/pictures/custom/11197be73a.svg",
+    "image": "/pictures/custom/dd363d4d516d.jpg",
     "wrong": [
       "Elf",
       "Giant",
@@ -58,7 +58,7 @@ export const CUSTOM_PICTURES = [
   {
     "category": "logo",
     "answer": "Apple",
-    "image": "/pictures/custom/22c777abe9.svg",
+    "image": "/pictures/custom/c296ebe9451e.jpg",
     "wrong": [
       "Samsung",
       "Huawei",
@@ -69,7 +69,7 @@ export const CUSTOM_PICTURES = [
   {
     "category": "logo",
     "answer": "Nike",
-    "image": "/pictures/custom/5a85897fcc.svg",
+    "image": "/pictures/custom/831f8f2f7658.jpg",
     "wrong": [
       "Adidas",
       "Puma",
@@ -80,7 +80,7 @@ export const CUSTOM_PICTURES = [
   {
     "category": "logo",
     "answer": "McDonald's",
-    "image": "/pictures/custom/72c1521804.svg",
+    "image": "/pictures/custom/ea4ec34b6617.jpg",
     "wrong": [
       "KFC",
       "Burger King",
@@ -91,7 +91,7 @@ export const CUSTOM_PICTURES = [
   {
     "category": "logo",
     "answer": "YouTube",
-    "image": "/pictures/custom/5671d267e1.svg",
+    "image": "/pictures/custom/9a4c0c15243c.jpg",
     "wrong": [
       "TikTok",
       "Instagram",
@@ -102,7 +102,7 @@ export const CUSTOM_PICTURES = [
   {
     "category": "logo",
     "answer": "WhatsApp",
-    "image": "/pictures/custom/2ebeccefd3.svg",
+    "image": "/pictures/custom/387913a9a256.jpg",
     "wrong": [
       "Telegram",
       "Signal",
@@ -113,7 +113,7 @@ export const CUSTOM_PICTURES = [
   {
     "category": "flag",
     "answer": "Nigeria",
-    "image": "/pictures/custom/89707d4f7d.svg",
+    "image": "/pictures/custom/fd2c8449e61a.jpg",
     "wrong": [
       "Niger",
       "Italy",
@@ -124,7 +124,7 @@ export const CUSTOM_PICTURES = [
   {
     "category": "flag",
     "answer": "50",
-    "image": "/pictures/custom/b43905cb88.svg",
+    "image": "/pictures/custom/027b8f8a8a86.jpg",
     "wrong": [
       "13",
       "27",
@@ -135,7 +135,7 @@ export const CUSTOM_PICTURES = [
   {
     "category": "flag",
     "answer": "Japan",
-    "image": "/pictures/custom/58fa339e19.svg",
+    "image": "/pictures/custom/2a80bf6b694b.jpg",
     "wrong": [
       "China",
       "South Korea",
@@ -146,7 +146,7 @@ export const CUSTOM_PICTURES = [
   {
     "category": "flag",
     "answer": "Ghana",
-    "image": "/pictures/custom/eeb250d50e.svg",
+    "image": "/pictures/custom/4c33ffac8917.jpg",
     "wrong": [
       "Cameroon",
       "Senegal",
@@ -157,7 +157,7 @@ export const CUSTOM_PICTURES = [
   {
     "category": "celebrities",
     "answer": "Davido",
-    "image": "/pictures/custom/5d63137e06.svg",
+    "image": "/pictures/custom/adb8f2f3a697.jpg",
     "wrong": [
       "Wizkid",
       "Burna Boy",
@@ -168,7 +168,7 @@ export const CUSTOM_PICTURES = [
   {
     "category": "sports_celebrities",
     "answer": "Cristiano Ronaldo",
-    "image": "/pictures/custom/d179601acd.svg",
+    "image": "/pictures/custom/c605ba6514ae.jpg",
     "wrong": [
       "Lionel Messi",
       "Kylian Mbappé",
@@ -179,7 +179,7 @@ export const CUSTOM_PICTURES = [
   {
     "category": "celebrities",
     "answer": "Jackie Chan",
-    "image": "/pictures/custom/d49b14d1f6.svg",
+    "image": "/pictures/custom/f65517871633.jpg",
     "wrong": [
       "Jet Li",
       "Donnie Yen",
@@ -190,7 +190,7 @@ export const CUSTOM_PICTURES = [
   {
     "category": "celebrities",
     "answer": "Burna Boy",
-    "image": "/pictures/custom/1c2963752f.svg",
+    "image": "/pictures/custom/a9df51a63a6a.jpg",
     "wrong": [
       "Olamide",
       "Asake",
@@ -201,7 +201,7 @@ export const CUSTOM_PICTURES = [
   {
     "category": "cars",
     "answer": "Sedan",
-    "image": "/pictures/custom/8a9c453f40.svg",
+    "image": "/pictures/custom/95e64527bc7e.jpg",
     "wrong": [
       "Pickup truck",
       "Motorcycle",
@@ -212,7 +212,7 @@ export const CUSTOM_PICTURES = [
   {
     "category": "car_brands",
     "answer": "Mercedes-Benz",
-    "image": "/pictures/custom/7f12599b52.svg",
+    "image": "/pictures/custom/9a12aa2f7e01.jpg",
     "wrong": [
       "BMW",
       "Audi",
@@ -223,7 +223,7 @@ export const CUSTOM_PICTURES = [
   {
     "category": "cars",
     "answer": "Supercar",
-    "image": "/pictures/custom/3d2f515d6c.svg",
+    "image": "/pictures/custom/0fe10f89067d.jpg",
     "wrong": [
       "School bus",
       "Tractor",
@@ -234,7 +234,7 @@ export const CUSTOM_PICTURES = [
   {
     "category": "sports",
     "answer": "Basketball",
-    "image": "/pictures/custom/146120390a.svg",
+    "image": "/pictures/custom/c925fc88ec32.jpg",
     "wrong": [
       "Football",
       "Volleyball",
@@ -245,7 +245,7 @@ export const CUSTOM_PICTURES = [
   {
     "category": "sports",
     "answer": "Tennis",
-    "image": "/pictures/custom/f39453ec7b.svg",
+    "image": "/pictures/custom/d63682f76280.jpg",
     "wrong": [
       "Badminton",
       "Squash",
@@ -256,7 +256,7 @@ export const CUSTOM_PICTURES = [
   {
     "category": "gaming",
     "answer": "Mario",
-    "image": "/pictures/custom/01ad0c8e82.svg",
+    "image": "/pictures/custom/04663fbff35c.jpg",
     "wrong": [
       "Luigi",
       "Sonic",
@@ -267,7 +267,7 @@ export const CUSTOM_PICTURES = [
   {
     "category": "gaming",
     "answer": "Minecraft",
-    "image": "/pictures/custom/63686b477c.svg",
+    "image": "/pictures/custom/bfd5b8b71c1b.jpg",
     "wrong": [
       "Roblox",
       "Fortnite",
@@ -278,7 +278,7 @@ export const CUSTOM_PICTURES = [
   {
     "category": "food_nigerian",
     "answer": "Jollof rice",
-    "image": "/pictures/custom/7606f96b9c.svg",
+    "image": "/pictures/custom/4c0e56e8f4c6.jpg",
     "wrong": [
       "Fried rice",
       "Ofada rice",
@@ -289,7 +289,7 @@ export const CUSTOM_PICTURES = [
   {
     "category": "food_nigerian",
     "answer": "Egusi soup",
-    "image": "/pictures/custom/e30f4ebb66.svg",
+    "image": "/pictures/custom/535ca4d01a83.jpg",
     "wrong": [
       "Okra soup",
       "Banga soup",
@@ -300,7 +300,7 @@ export const CUSTOM_PICTURES = [
   {
     "category": "animals",
     "answer": "African grey parrot",
-    "image": "/pictures/custom/a3f8a83933.svg",
+    "image": "/pictures/custom/f9d6d8491ecc.jpg",
     "wrong": [
       "Eagle",
       "Ostrich",
@@ -311,7 +311,7 @@ export const CUSTOM_PICTURES = [
   {
     "category": "technology",
     "answer": "Microsoft Windows",
-    "image": "/pictures/custom/5d103e0140.svg",
+    "image": "/pictures/custom/67a555388090.jpg",
     "wrong": [
       "macOS",
       "Linux",
@@ -322,7 +322,7 @@ export const CUSTOM_PICTURES = [
   {
     "category": "landmarks",
     "answer": "Paris",
-    "image": "/pictures/custom/48a54670c3.svg",
+    "image": "/pictures/custom/f5400365574b.jpg",
     "wrong": [
       "Rome",
       "Madrid",

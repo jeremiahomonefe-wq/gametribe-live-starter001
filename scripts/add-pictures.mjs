@@ -21,11 +21,13 @@ const parsed = parsePictureRows(fs.readFileSync(csvFile, 'utf8'));
 if (parsed.fatal) fail([parsed.fatal]);
 
 const files = Object.fromEntries(fs.readdirSync(src).filter((f) => fs.statSync(path.join(src, f)).isFile()).map((f) => [f, fs.statSync(path.join(src, f)).size]));
-// Hashed names: the address of a picture must never give the answer away.
-const makeName = (category, answer, ext) => `${crypto.createHash('sha1').update(`gt-custom:${category}:${answer}`).digest('hex').slice(0, 10)}.${ext}`;
-const { items, copies, problems } = prepareCustom(parsed.rows, { builtIn: PICTURE_POOL, files, makeName });
+// Hashed names: the address of a picture must never give the answer away. The picture's own bytes are part of the hash,
+// so swapping in a different image for the same row gives it a new address and browsers never show a stale one.
+const makeName = (category, answer, ext, file) => `${crypto.createHash('sha1').update(`gt-custom:${category}:${answer}:`).update(fs.readFileSync(path.join(src, file))).digest('hex').slice(0, 12)}.${ext}`;
+const { items, copies, problems, warnings } = prepareCustom(parsed.rows, { builtIn: PICTURE_POOL, files, makeName });
 if (problems.length) fail(['Nothing was changed. Fix these and run it again:', ...problems.map((p) => `  ${p.row ? `Row ${p.row}: ` : ''}${p.message}`)]);
 
+for (const w of warnings) console.warn(`  Heads up, row ${w.row}: ${w.message}`);
 const outDir = path.join(root, 'client/public/pictures/custom');
 fs.rmSync(outDir, { recursive: true, force: true });
 fs.mkdirSync(outDir, { recursive: true });
@@ -35,4 +37,5 @@ fs.writeFileSync(path.join(root, 'server/src/custom-pictures.js'), `// GENERATED
 export const CUSTOM_PICTURES = ${JSON.stringify(items, null, 2)};
 `);
 const cats = [...new Set(items.map((i) => i.category))];
+for (const c of copies) { const it = items.find((i) => i.image.endsWith(`/${c.to}`)); console.log(`  ${c.from}  ->  [${it.category}] ${it.answer}`); }
 console.log(`Added ${items.length} picture${items.length === 1 ? '' : 's'}${cats.length ? ` in ${cats.join(', ')}` : ''}. Now run: npm run build`);
