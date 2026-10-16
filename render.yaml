@@ -1,0 +1,31 @@
+# Render blueprint: ONE web service that runs the game server AND serves the website.
+# Use exactly one instance. Games live in this process's memory, so scaling to several instances breaks them.
+services:
+  - type: web
+    name: gametribe-live
+    runtime: node
+    plan: free            # free plans sleep when idle and lose all games when they wake; use a paid always-on plan for real events
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      # Website address(es) allowed to connect, comma separated. Only needed if the website is hosted somewhere else (e.g. Vercel).
+      - key: CLIENT_ORIGIN
+        value: https://gametribe-live-starter.vercel.app
+      # Phone numbers on the join form: required, optional or off.
+      - key: COLLECT_PHONES
+        value: required
+      # Secret that unlocks the /admin/contacts.csv download of everything collected. Render generates it;
+      # read it under the service's Environment page. Remove this entry to switch the download off.
+      - key: ADMIN_TOKEN
+        generateValue: true
+    # Saved phone numbers only survive a redeploy or restart on a PAID service with a persistent disk.
+    # On the free plan they are wiped. To keep them: change `plan` above to a paid plan, uncomment this
+    # block, and add an environment variable DATA_DIR with the value /var/data.
+    # A disk also means exactly one instance and a short gap while a new version deploys.
+    # disk:
+    #   name: gametribe-data
+    #   mountPath: /var/data
+    #   sizeGB: 1
