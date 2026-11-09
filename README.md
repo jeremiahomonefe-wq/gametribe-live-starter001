@@ -251,3 +251,24 @@ client/
 ## Security and reliability notes
 
 This is a prototype. Before public deployment, add rate limits, nickname/content validation policy, host-token expiry and rotation, durable storage, structured logs, origin/CORS restrictions, operational monitoring, and abuse protection. The host token is a development credential and should not be treated as a complete production authentication system.
+
+
+---
+
+## Game Tribe website version
+
+This copy has the **new Game Tribe look** (same colours, fonts and buttons as gametribeng.com). Only the
+screens changed (`client/`). The game engine in `server/` is exactly the same as before.
+
+* **Back to the website:** the game links back to your website (top bar, footer, and "Get your tickets" after a game).
+  Set the website address when the client is built with `VITE_SITE_URL` (default `https://www.gametribeng.com`).
+* **Where it runs:** put the game on its own address, for example **play.gametribeng.com**, on an always-on host
+  (Render, Fly.io or Railway). The website's **Play** page sends players there. The website itself stays on Vercel.
+* **Steps (Render):**
+  1. Create the service from this project (it already has `render.yaml` and a `Dockerfile`).
+  2. Choose an **always-on** plan (a free plan sleeps and loses live games).
+  3. Add environment variables: `ADMIN_TOKEN` (a long secret, to download all contacts), and optionally
+     `COLLECT_PHONES` (`required`, `optional` or `off`) and `DATA_DIR` (a persistent disk path).
+  4. Add the custom domain **play.gametribeng.com** and create the DNS record Render shows you.
+  5. Open `https://play.gametribeng.com/health`. You should see `{"ok":true,...}`.
+* **Run one copy only.** Live games are kept in memory.
