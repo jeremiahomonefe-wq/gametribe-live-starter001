@@ -3,7 +3,7 @@
 if (process.env.VERCEL && !process.env.VITE_SERVER_URL) {
   console.error('\nBuild stopped: VITE_SERVER_URL is not set.');
   console.error('Set it in Vercel (Project Settings > Environment Variables) to the address of your game server,');
-  console.error('for example https://gametribe-live.onrender.com, then redeploy.\n');
+  console.error('for example https://gametribe-live-6xdp.onrender.com/, then redeploy.\n');
   process.exit(1);
 }
 if (process.env.VERCEL && !/^https:\/\//.test(process.env.VITE_SERVER_URL)) {
