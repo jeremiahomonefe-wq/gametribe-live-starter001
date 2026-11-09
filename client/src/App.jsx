@@ -10,6 +10,10 @@ import { buildPictureRound, pictureCategories, customCategories, ALL_PICTURES } 
 // Dev: the server runs on :4000. Production: the website and the game server share one address.
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || (import.meta.env.DEV ? 'http://localhost:4000' : window.location.origin);
 const SERVER_HOST = (() => { try { return new URL(SERVER_URL, 'http://localhost').hostname; } catch { return ''; } })();
+// The Game Tribe website this game belongs to. Set VITE_SITE_URL when you build to change it.
+const SITE_URL = (import.meta.env.VITE_SITE_URL || 'https://www.gametribeng.com').replace(/\/+$/, '');
+const SITE_HOST = (() => { try { return new URL(SITE_URL).hostname.replace(/^www\./, ''); } catch { return 'gametribeng.com'; } })();
+const TICKER_TEXT = '🎲 Games • Banters • Hangout • Connect   🎯   Abraka • Play • Connect • Repeat   🎯   🔥 Game Tribe Live   🎯   '.repeat(3);
 const LOOKS_SERVERLESS = /\.(vercel|netlify)\.app$/.test(SERVER_HOST);
 
 // The player page has its own address: /#join, or /#join=123456 to arrive with the PIN filled in.
@@ -46,6 +50,7 @@ export default function App({ sessionKey = 'gametribe:player-session', watchPin 
   const [phoneNotice, setPhoneNotice] = useState('');
   const [answerSent, setAnswerSent] = useState(false);
   const [answerAccepted, setAnswerAccepted] = useState(false);
+  const [chosen, setChosen] = useState(null); // which answer this player tapped, only used to highlight it
   const [secondsLeft, setSecondsLeft] = useState(null);
   const [result, setResult] = useState(null);
   const [picking, setPicking] = useState(false); // the "which pictures?" panel on the home screen
@@ -178,6 +183,7 @@ export default function App({ sessionKey = 'gametribe:player-session', watchPin 
   useEffect(() => {
     setAnswerSent(false);
     setAnswerAccepted(false);
+    setChosen(null);
     if (game?.phase === 'question') setResult(null);
     if (game?.phase === 'finished') setConfirmEnd(false);
   }, [game?.questionIndex, game?.phase]);
@@ -223,6 +229,7 @@ export default function App({ sessionKey = 'gametribe:player-session', watchPin 
   function submitAnswer(answerIndex) {
     if (!player || !game || answerSent || game.phase !== 'question') return;
     setAnswerSent(true);
+    setChosen(answerIndex);
     socket.emit('player:answer', { pin: game.pin || player.pin, answerIndex, questionIndex: game.question?.index });
   }
   function openProjector() {
@@ -261,11 +268,11 @@ export default function App({ sessionKey = 'gametribe:player-session', watchPin 
   const hasAnsweredCurrentQuestion = Boolean(me && game && me.questionIndex === game.questionIndex && me.answered);
 
   return <>
-    <div className="ticker">Abraka • Play • Connect • Repeat</div>
+    <div className="ticker" aria-hidden="true"><div className="track">{[0, 1].map((n) => <span key={n}>{TICKER_TEXT}</span>)}</div></div>
     <main className="app-shell">
     <header className={`topbar topbar-${role}`}>
       <button className="brand" onClick={resetToHome} aria-label="Game Tribe Live home"><Logo small /></button>
-      <div className="connection"><span className={connected ? 'dot online' : 'dot'} />{connected ? 'Connected' : everConnected ? 'Connection lost. Reconnecting...' : showLinkNotice ? 'Cannot reach the server' : 'Connecting...'}{connected && serverInstance && <small className="server-id" title="Everyone in one game must show the same server code">server {serverInstance}</small>}</div>
+      <div className="topbar-actions"><a className="site-link" href={SITE_URL}>← {SITE_HOST}</a><div className="connection"><span className={connected ? 'dot online' : 'dot'} />{connected ? 'Connected' : everConnected ? 'Connection lost. Reconnecting...' : showLinkNotice ? 'Cannot reach the server' : 'Connecting...'}{connected && serverInstance && <small className="server-id" title="Everyone in one game must show the same server code">server {serverInstance}</small>}</div></div>
     </header>
 
     {LOOKS_SERVERLESS && <div className="notice warn" role="alert">
@@ -285,8 +292,7 @@ export default function App({ sessionKey = 'gametribe:player-session', watchPin 
 
     {role === 'home' && <section className="hero">
       <div className="hero-main">
-        <Logo hero />
-        <div className="script">Live</div>
+        <span className="pill">🎲 Live · Play · Connect</span>
         <h1>Your next big play date is live.</h1>
         <p className="hero-copy">Host a quiz for your crew, class or festival crowd. Players join with a PIN on their phones. No account, no fuss.</p>
         <div className="home-actions">
@@ -365,13 +371,13 @@ export default function App({ sessionKey = 'gametribe:player-session', watchPin 
 
     {role === 'player' && game && <section className="player-game">
       <div className="player-game-top"><Logo small /><span className="player-pin">PIN {game.pin || player.pin}</span></div>
-      {!['question', 'locked', 'reveal', 'finished'].includes(game.phase) && <div className="panel waiting-card"><div className="waiting-icon">✓</div><div className="eyebrow">YOU'RE IN</div><h2>You're in the game, {player.nickname}!</h2><p>Keep your eyes on the big screen. The host will start shortly.</p><div className="waiting-count">{game.playerCount} players joined</div></div>}
-      {inQuestion && question && <div className={`player-question${question.image ? ' with-picture' : ''}`}><div className="question-meta"><span>QUESTION {question.index + 1} / {question.total}</span><span className="timer">{secondsLeft ?? '—'}s</span></div><PictureFrame question={question} /><div className="player-question-card"><h2>{question.prompt}</h2></div><div className="answer-grid">{question.options.map((option, index) => <button key={option} className={`answer-button answer-${index}`} disabled={answerSent || hasAnsweredCurrentQuestion || secondsLeft === 0} onClick={() => submitAnswer(index)}><span className="answer-letter">{String.fromCharCode(65 + index)}</span>{option}</button>)}</div>{(answerSent || hasAnsweredCurrentQuestion) && <div className="answer-status">{answerAccepted ? 'Answer received!' : hasAnsweredCurrentQuestion ? 'Your answer is already recorded.' : 'Submitting answer...'}</div>}{game.phase === 'locked' && !answerSent && !hasAnsweredCurrentQuestion && <div className="answer-status">Time is up. Waiting for the reveal.</div>}</div>}
+      {!['question', 'locked', 'reveal', 'finished'].includes(game.phase) && <div className="panel waiting-card"><div className="waiting-icon">✓</div><div className="eyebrow">YOU'RE IN</div><h2>You're in the game, {player.nickname}!</h2><p>Keep your eyes on the big screen. The host will start shortly.</p><div className="waiting-count">{game.playerCount} player{game.playerCount === 1 ? '' : 's'} joined</div></div>}
+      {inQuestion && question && <div className={`player-question${question.image ? ' with-picture' : ''}`}><div className="question-meta"><span>QUESTION {question.index + 1} / {question.total}</span><span className="timer">{secondsLeft ?? '—'}s</span></div><PictureFrame question={question} /><div className="player-question-card"><h2>{question.prompt}</h2></div><div className="answer-grid">{question.options.map((option, index) => <button key={option} className={`answer-button answer-${index}${chosen === index ? ' chosen' : ''}`} disabled={answerSent || hasAnsweredCurrentQuestion || secondsLeft === 0} onClick={() => submitAnswer(index)}><span className="answer-letter">{String.fromCharCode(65 + index)}</span>{option}</button>)}</div>{(answerSent || hasAnsweredCurrentQuestion) && <div className="answer-status">{answerAccepted ? 'Answer received!' : hasAnsweredCurrentQuestion ? 'Your answer is already recorded.' : 'Submitting answer...'}</div>}{game.phase === 'locked' && !answerSent && !hasAnsweredCurrentQuestion && <div className="answer-status">Time is up. Waiting for the reveal.</div>}</div>}
       {game.phase === 'reveal' && <ResultCard result={result} nickname={player.nickname} score={result?.score ?? me?.score ?? 0} />}
-      {game.phase === 'finished' && <div className="panel waiting-card"><div className="eyebrow">GAME COMPLETE</div><h2>Thanks for playing, {player.nickname}!</h2><p>{myRank ? `You finished #${myRank} of ${me?.total ?? game.playerCount}. Your final score` : 'Your final score'}</p><div className="final-score">{me?.score ?? 0}</div><p>Play, connect and repeat.</p><div className="finish-actions"><button className="button primary" onClick={resetToHome}>Back to home</button><button className="button secondary" onClick={joinAnother}>Join another game</button></div></div>}
+      {game.phase === 'finished' && <div className="panel waiting-card"><div className="eyebrow">GAME COMPLETE</div><h2>Thanks for playing, {player.nickname}!</h2><p>{myRank ? `You finished #${myRank} of ${me?.total ?? game.playerCount}. Your final score` : 'Your final score'}</p><div className="final-score">{me?.score ?? 0}</div><p>Play, connect and repeat.</p><div className="finish-actions"><button className="button primary" onClick={joinAnother}>Join another game</button><a className="button secondary" href={`${SITE_URL}/?tickets=1`}>Get your tickets</a><a className="button" href={SITE_URL}>Back to {SITE_HOST}</a></div></div>}
     </section>}
 
-    <footer className="footer"><span>Game Tribe Live</span><span>Play, connect and repeat.</span></footer>
+    <footer className="footer"><Logo small /><div className="footer-links"><a href={SITE_URL}>Back to {SITE_HOST}</a><a href={`${SITE_URL}/faq`}>FAQs</a><a href={`${SITE_URL}/contact`}>Contact</a></div><span className="tagline">Play, connect and repeat.</span></footer>
     </main>
   </>;
 }
@@ -397,7 +403,7 @@ function Leaderboard({ players }) {
 }
 
 function Logo({ small = false, hero = false }) {
-  return <span className={`logo${small ? ' small' : ''}${hero ? ' hero-logo' : ''}`} role="img" aria-label="Game Tribe"><span className="logo-game">GAME</span><span className="logo-tribe">TRIBE</span></span>;
+  return <span className={`logo${small ? ' small' : ''}${hero ? ' hero-logo' : ''}`} role="img" aria-label="Game Tribe"><img src="/logo.png" alt="" /></span>;
 }
 
 function winnerLine(players) {
